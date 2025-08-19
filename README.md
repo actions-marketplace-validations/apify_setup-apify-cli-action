@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Apify CLI
-        uses: apify/setup-apify-cli@master
+        uses: apify/setup-apify-cli-action@main
         with:
           token: ${{ secrets.APIFY_TOKEN }}
 
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Apify CLI
-        uses: apify/setup-apify-cli@master
+        uses: apify/setup-apify-cli-action@main
         with:
           version: '1.1.1'
           token: ${{ secrets.APIFY_TOKEN }}
