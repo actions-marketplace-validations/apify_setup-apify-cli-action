@@ -1,0 +1,36 @@
+name: 'Setup Apify CLI'
+description: 'Install and configure the Apify CLI for use in GitHub Actions'
+branding:
+  icon: 'terminal'
+  color: 'green'
+inputs:
+  version:
+    description: 'Version of Apify CLI to install (e.g. "1.1.1", "latest"). Defaults to latest stable version.'
+    required: false
+    default: 'latest'
+  token:
+    description: 'Your Apify token for authentication. The CLI will be automatically logged in with this token.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Apify CLI
+      uses: jdx/mise-action@v2
+      with:
+        version: '2025.8.13'
+        mise_toml: |
+          [settings]
+          idiomatic_version_file_enable_tools = []
+
+          [tools]
+          "ubi:apify/apify-cli" = { version = "${{ inputs.version }}", matching = "apify", exe = "apify" }
+    - name: Login to Apify
+      shell: bash
+      run: |
+        echo "::add-mask::${{ inputs.token }}"
+        apify login -t ${{ inputs.token }}
+    - name: Verify Apify CLI installation
+      shell: bash
+      run: |
+        apify --version
+        echo "Apify CLI has been successfully installed and is ready to use!"
