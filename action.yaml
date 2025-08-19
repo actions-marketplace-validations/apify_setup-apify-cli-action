@@ -24,13 +24,31 @@ runs:
 
           [tools]
           "ubi:apify/apify-cli" = { version = "${{ inputs.version }}", matching = "apify", exe = "apify" }
-    - name: Login to Apify
+
+    - name: Login to Apify (Unix)
+      if: runner.os != 'Windows'
       shell: bash
       run: |
         echo "::add-mask::${{ inputs.token }}"
         apify login -t ${{ inputs.token }}
-    - name: Verify Apify CLI installation
+    - name: Login to Apify (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        Write-Output "::add-mask::${{ inputs.token }}"
+        apify login -t "${{ inputs.token }}"
+
+    - name: Verify Apify CLI installation (Unix)
+      if: runner.os != 'Windows'
       shell: bash
       run: |
         apify --version
+        apify info
         echo "Apify CLI has been successfully installed and is ready to use!"
+    - name: Verify Apify CLI installation (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        apify --version
+        apify info
+        Write-Output "Apify CLI has been successfully installed and is ready to use!"
